@@ -24,7 +24,7 @@ public class InitRunner {
 
     @Autowired
     private TableService tableService;
-    @Value("${file.path:本地}")
+    @Value("${file.path}")
     private String filePath;
     @Value("${exclude.field:}")
     private String excludeField;
@@ -44,8 +44,29 @@ public class InitRunner {
 
         List<TableInfo> tableList = tableService.getTableList();
         StringBuilder stringBuilder = new StringBuilder();
-        for (TableInfo tableInfo : tableList) {
-            stringBuilder.append("### ");
+        stringBuilder.append("| 序号 |");
+        stringBuilder.append(" 表名 |");
+        stringBuilder.append(" 说明 |");
+        stringBuilder.append('\n');
+        stringBuilder.append("|------ |------ |------ |");
+        stringBuilder.append('\n');
+        for (int i = 0; i < tableList.size(); i++) {
+            stringBuilder.append('|');
+            TableInfo tableInfo = tableList.get(i);
+            stringBuilder.append(i + 1 + " ");
+            stringBuilder.append('|');
+            stringBuilder.append(tableInfo.getTableName() + " ");
+            stringBuilder.append('|');
+            stringBuilder.append(tableInfo.getTableComment() + " ");
+            stringBuilder.append('\n');
+        }
+        stringBuilder.append('\n');
+
+        for (int index = 0; index < tableList.size(); index++) {
+            String titleNumber = "#### 4.2.";
+            TableInfo tableInfo = tableList.get(index);
+            titleNumber += index + 2;
+            stringBuilder.append(titleNumber + " ");
             stringBuilder.append(tableInfo.getTableComment());
             stringBuilder.append('(');
             stringBuilder.append(tableInfo.getTableName());
@@ -88,9 +109,10 @@ public class InitRunner {
             stringBuilder.append('\n');
         }
 
-        if ("本地".equals(filePath)){
-            filePath = "D:\\数据库文档(" + DateTime.now().toString("yyyy年MM月dd日HH时mm") + ").md";
-        }
+        // if ("本地".equals(filePath)){
+        //     filePath = "D:\\数据库文档(" + DateTime.now().toString("yyyy年MM月dd日HH时mm") + ").md";
+        // }
+        filePath = filePath + "数据库文档(" + DateTime.now().toString("yyyy年MM月dd日HH时mm") + ").md";
         System.out.println(filePath);
         File writeName = new File(filePath);
         writeName.createNewFile();
